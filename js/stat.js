@@ -62,6 +62,7 @@ var renderText = function (ctx, txt, x, y, color) {
 };
 
 var renderBar = function (ctx, index, chartScale, label, value, color) {
+  ctx.textBaseline = 'bottom';
   var barX = index * (barParams.GAP + barParams.WIDTH);
   var barHeight = chartScale * value;
   var barTop = LINE_HEIGHT + barParams.MAX_HEIGHT - barHeight;
@@ -144,8 +145,6 @@ var renderStatistics = function (ctx, names, times) {
 
   // определить масштаб диаграммы
   var chartScale = barParams.MAX_HEIGHT / maxTime;
-
-  ctx.textBaseline = 'bottom';
 
   for (i = 0; i < barsTotal; i++) {
     var barColor = (names[i] === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
