@@ -99,7 +99,7 @@ var renderChart = function (ctx, labels, values) {
   var barsTotal = (values.length > labels.length) ? labels.length : values.length;
   barsTotal = (barsTotal > USERS_TOTAL) ? USERS_TOTAL : barsTotal;
 
-  if (!maxValue || barsTotal < 1) {
+  if (!isFinite(maxValue) || barsTotal < 1) {
     ctx.textAlign = 'center';
     renderText(ctx, ERROR_MESSAGE, errorMessageParams.X, errorMessageParams.Y, errorMessageParams.COLOR);
     ctx.restore();
@@ -116,18 +116,10 @@ var renderChart = function (ctx, labels, values) {
 
 // вспомогательные функции
 
-// var getMaxElement = function (arr) {
-//   var maxElement = Math.max.apply(null, arr);
-//   return isFinite(maxElement) ? maxElement : false;
-// };
-
 var getMaxElement = function (arr) {
-  if (arr.length > 0) {
-    return arr.reduce(function (max, item) {
-      return (max > item) ? max : item;
-    });
-  }
-  return false;
+  return arr.reduce(function (max, item) {
+    return (max > item) ? max : item;
+  }, -Infinity);
 };
 
 var getRandomNumber = function (max) {
