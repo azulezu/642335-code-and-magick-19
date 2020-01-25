@@ -115,15 +115,17 @@ var renderChart = function (ctx, labels, values) {
 };
 
 // вспомогательные функции
+
+// var getMaxElement = function (arr) {
+//   var maxElement = Math.max.apply(null, arr);
+//   return isFinite(maxElement) ? maxElement : false;
+// };
+
 var getMaxElement = function (arr) {
   if (arr.length > 0) {
-    var maxElement = arr[0];
-    for (var i = 1; i < arr.length; i++) {
-      if (arr[i] > maxElement) {
-        maxElement = arr[i];
-      }
-    }
-    return maxElement;
+    return arr.reduce(function (max, item) {
+      return (max > item) ? max : item;
+    });
   }
   return false;
 };
@@ -132,7 +134,6 @@ var getRandomNumber = function (max) {
   return Math.floor(Math.random() * max + 1);
 };
 
-
 var getRandomBlueColor = function () {
   var MAX_PERCENT = 100;
   var HUE = 240;
@@ -140,6 +141,7 @@ var getRandomBlueColor = function () {
   var Saturate = getRandomNumber(MAX_PERCENT) + '%';
   return 'hsl(' + HUE + ', ' + Saturate + ', ' + LIGHTNESS + ')';
 };
+
 
 var renderStatistics = function (ctx, names, times) {
   // сохранить исходный контекст
