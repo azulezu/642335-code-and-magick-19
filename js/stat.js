@@ -38,17 +38,17 @@ var titleParams = {
   Y: cloudParams.Y + PADDING,
 };
 
-var ERROR_MESSAGE = 'Нет данных для показа статистики';
-var errorMessageParams = {
-  X: cloudParams.X + cloudParams.WIDTH / 2,
-  Y: cloudParams.Y + cloudParams.HEIGHT / 2 - LINE_HEIGHT / 2,
-  COLOR: '#f00',
-};
-
 var barParams = {
   GAP: 50,
   WIDTH: 40,
   MAX_HEIGHT: 150,
+};
+
+var ERROR_MESSAGE = 'Нет данных для показа статистики';
+var errorMessageParams = {
+  X: cloudParams.WIDTH / 2 - 2 * PADDING,
+  Y: barParams.MAX_HEIGHT / 2 + LINE_HEIGHT / 2,
+  COLOR: '#f00',
 };
 
 var renderCloud = function (ctx, cloud) {
@@ -57,11 +57,14 @@ var renderCloud = function (ctx, cloud) {
 };
 
 var renderText = function (ctx, txt, x, y, color) {
+  ctx.font = fontStyle.SIZE + ' ' + fontStyle.FAMILY;
   ctx.fillStyle = (color) ? color : fontStyle.COLOR;
   ctx.fillText(txt, x, y);
 };
 
 var renderMultilineText = function (ctx, txt, x, y, color) {
+  ctx.textAlign = 'start';
+  ctx.textBaseline = 'hanging';
   var lines = txt.split('\n');
   var linesCount = 0;
   lines.forEach(function (line, i) {
@@ -88,6 +91,27 @@ var renderBar = function (ctx, index, chartScale, label, value, color) {
   // подпись
   ctx.textAlign = 'start';
   renderText(ctx, label, barX, barParams.MAX_HEIGHT + 2 * LINE_HEIGHT);
+};
+
+var renderChart = function (ctx, labels, values) {
+  var maxValue = getMaxElement(values);
+  // определить кол-во столбиков для переданных данных
+  var barsTotal = (values.length > labels.length) ? labels.length : values.length;
+  barsTotal = (barsTotal > USERS_TOTAL) ? USERS_TOTAL : barsTotal;
+
+  if (!maxValue || barsTotal < 1) {
+    ctx.textAlign = 'center';
+    renderText(ctx, ERROR_MESSAGE, errorMessageParams.X, errorMessageParams.Y, errorMessageParams.COLOR);
+    ctx.restore();
+    return;
+  }
+
+  // определить масштаб диаграммы
+  var chartScale = barParams.MAX_HEIGHT / maxValue;
+  for (var i = 0; i < barsTotal; i++) {
+    var barColor = (labels[i] === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
+    renderBar(ctx, i, chartScale, labels[i], values[i], barColor);
+  }
 };
 
 // вспомогательные функции
@@ -121,25 +145,9 @@ var renderStatistics = function (ctx, names, times) {
   // сохранить исходный контекст
   ctx.save();
 
-  ctx.font = fontStyle.SIZE + ' ' + fontStyle.FAMILY;
-  ctx.textBaseline = 'hanging';
-  ctx.textAlign = 'start';
-
   // нарисовать облако с тенью
   renderCloud(ctx, shadowParams);
   renderCloud(ctx, cloudParams);
-
-  var maxTime = getMaxElement(times);
-  // определить кол-во столбиков для переданных данных
-  var barsTotal = (times.length > names.length) ? names.length : times.length;
-  barsTotal = (barsTotal > USERS_TOTAL) ? USERS_TOTAL : barsTotal;
-
-  if (!maxTime || barsTotal < 1) {
-    ctx.textAlign = 'center';
-    renderText(ctx, ERROR_MESSAGE, errorMessageParams.X, errorMessageParams.Y, errorMessageParams.COLOR);
-    ctx.restore();
-    return;
-  }
 
   // вывести заголовок
   var linesInTitle = renderMultilineText(ctx, TITLE, titleParams.X, titleParams.Y);
@@ -149,13 +157,7 @@ var renderStatistics = function (ctx, names, times) {
   var chartStartY = cloudParams.Y + PADDING + linesInTitle * LINE_HEIGHT;
   ctx.translate(chartStartX, chartStartY);
 
-  // определить масштаб диаграммы
-  var chartScale = barParams.MAX_HEIGHT / maxTime;
-
-  for (var i = 0; i < barsTotal; i++) {
-    var barColor = (names[i] === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
-    renderBar(ctx, i, chartScale, names[i], times[i], barColor);
-  }
+  renderChart(ctx, names, times);
 
   // вернуть исходный контекст
   ctx.restore();
