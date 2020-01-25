@@ -61,6 +61,16 @@ var renderText = function (ctx, txt, x, y, color) {
   ctx.fillText(txt, x, y);
 };
 
+var renderMultilineText = function (ctx, txt, x, y, color) {
+  var lines = txt.split('\n');
+  var linesCount = 0;
+  lines.forEach(function (line, i) {
+    renderText(ctx, line, x, y + i * LINE_HEIGHT, color);
+    linesCount = linesCount + 1;
+  });
+  return linesCount;
+};
+
 var renderBar = function (ctx, index, chartScale, label, value, color) {
   ctx.textBaseline = 'bottom';
   var barX = index * (barParams.GAP + barParams.WIDTH);
@@ -132,21 +142,17 @@ var renderStatistics = function (ctx, names, times) {
   }
 
   // вывести заголовок
-  var lines = TITLE.split('\n');
-  for (var i = 0; i < lines.length; i++) {
-    renderText(ctx, lines[i], titleParams.X, titleParams.Y
-      + i * LINE_HEIGHT);
-  }
+  var linesInTitle = renderMultilineText(ctx, TITLE, titleParams.X, titleParams.Y);
 
   // перенести начало координат в верхний левый угол диаграммы
   var chartStartX = cloudParams.X + 2 * PADDING;
-  var chartStartY = cloudParams.Y + PADDING + lines.length * LINE_HEIGHT;
+  var chartStartY = cloudParams.Y + PADDING + linesInTitle * LINE_HEIGHT;
   ctx.translate(chartStartX, chartStartY);
 
   // определить масштаб диаграммы
   var chartScale = barParams.MAX_HEIGHT / maxTime;
 
-  for (i = 0; i < barsTotal; i++) {
+  for (var i = 0; i < barsTotal; i++) {
     var barColor = (names[i] === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
     renderBar(ctx, i, chartScale, names[i], times[i], barColor);
   }
