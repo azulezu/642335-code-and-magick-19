@@ -91,9 +91,20 @@ var renderWizard = function (wizard) {
 };
 
 // -------------------------------------------------
-// основной блок
+// показывает волшебников на странице
 // -------------------------------------------------
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
-var wizards = createWizards();
-renderWizard(wizards[0]);
+var showSimilarWizards = function () {
+  var userDialog = document.querySelector('.setup');
+  userDialog.classList.remove('hidden');
+  var similarListElement = userDialog.querySelector('.setup-similar-list');
+  var fragment = document.createDocumentFragment();
+
+  var wizards = createWizards();
+  wizards.forEach(function (wizard) {
+    fragment.appendChild(renderWizard(wizard));
+  });
+  similarListElement.appendChild(fragment);
+  userDialog.querySelector('.setup-similar').classList.remove('hidden');
+};
+
+showSimilarWizards();
