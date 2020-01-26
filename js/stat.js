@@ -108,10 +108,10 @@ var renderChart = function (ctx, labels, values) {
 
   // определить масштаб диаграммы
   var chartScale = barParams.MAX_HEIGHT / maxValue;
-  for (var i = 0; i < barsTotal; i++) {
-    var barColor = (labels[i] === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
-    renderBar(ctx, i, chartScale, labels[i], values[i], barColor);
-  }
+  labels.slice(0, barsTotal).forEach(function (label, index) {
+    var barColor = (label === currentUser.NAME) ? currentUser.COLOR : getRandomBlueColor();
+    renderBar(ctx, index, chartScale, label, values[index], barColor);
+  });
 };
 
 // вспомогательные функции
