@@ -76,6 +76,24 @@ var createWizards = function () {
   return wizardsData;
 };
 
+// -------------------------------------------------
+// coздает элемент, соотв. данным волшебника
+// -------------------------------------------------
+var renderWizard = function (wizard) {
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template') .content.querySelector('.setup-similar-item');
+  var wizardElement = similarWizardTemplate.cloneNode(true);
+
+  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+
+  return wizardElement;
+};
+
+// -------------------------------------------------
+// основной блок
+// -------------------------------------------------
 var userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
-createWizards();
+var wizards = createWizards();
+renderWizard(wizards[0]);
