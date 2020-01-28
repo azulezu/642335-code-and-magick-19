@@ -80,7 +80,7 @@ var createWizards = function () {
 // coздает элемент, соотв. данным волшебника
 // -------------------------------------------------
 var renderWizard = function (wizard) {
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template') .content.querySelector('.setup-similar-item');
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var wizardElement = similarWizardTemplate.cloneNode(true);
 
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
@@ -93,18 +93,21 @@ var renderWizard = function (wizard) {
 // -------------------------------------------------
 // показывает волшебников на странице
 // -------------------------------------------------
-var showSimilarWizards = function () {
-  var userDialog = document.querySelector('.setup');
-  userDialog.classList.remove('hidden');
-  var similarListElement = userDialog.querySelector('.setup-similar-list');
+var renderWizards = function (wizards) {
   var fragment = document.createDocumentFragment();
-
-  var wizards = createWizards();
   wizards.forEach(function (wizard) {
     fragment.appendChild(renderWizard(wizard));
   });
+  var similarListElement = document.querySelector('.setup-similar-list');
   similarListElement.appendChild(fragment);
+};
+
+var showUserDialog = function () {
+  var userDialog = document.querySelector('.setup');
+  userDialog.classList.remove('hidden');
   userDialog.querySelector('.setup-similar').classList.remove('hidden');
 };
 
-showSimilarWizards();
+var wizards = createWizards();
+renderWizards(wizards);
+showUserDialog();
