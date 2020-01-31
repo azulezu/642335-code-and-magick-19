@@ -44,6 +44,14 @@ var WIZARD_EYES_COLORS = [
   'green',
 ];
 
+var WIZARD_FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848',
+];
+
 // -------------------------------------------------
 // вспомогательные функции
 // -------------------------------------------------
@@ -168,6 +176,50 @@ var addSetupWindowProcessing = function () {
   });
 };
 
+// -------------------------------------------------
+// добавляет обработчики для формы
+// -------------------------------------------------
+var colorizeWizard = function (targetElement) {
+  var wizardElement = document.querySelector('.setup-wizard-appearance');
+  var wizardPart = '';
+  switch (targetElement.classList[0]) {
+    case 'wizard-coat':
+      wizardPart = 'coat';
+      break;
+    case 'wizard-eyes':
+      wizardPart = 'eyes';
+      break;
+    default:
+      return;
+  }
+  var color = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
+  var inputElement = wizardElement.querySelector('input[name="' + wizardPart + '-color"]');
+  inputElement.value = color;
+  targetElement.style.fill = color;
+};
+
+var colorizeFireball = function (wrapElement) {
+  var color = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
+  var inputElement = wrapElement.querySelector('input[name="fireball-color"]');
+  inputElement.value = color;
+  wrapElement.style.backgroundColor = color;
+};
+
+var addUserDialogProcessing = function () {
+  var userDialogElement = document.querySelector('.setup');
+  var wizardElement = userDialogElement.querySelector('.setup-wizard');
+  var wizardFireballElement = userDialogElement.querySelector('.setup-fireball-wrap');
+
+  wizardElement.addEventListener('click', function (evt) {
+    colorizeWizard(evt.target);
+  });
+
+  wizardFireballElement.addEventListener('click', function (evt) {
+    colorizeFireball(evt.currentTarget);
+  });
+};
+
 var wizards = createWizards();
 renderWizards(wizards);
 addSetupWindowProcessing();
+addUserDialogProcessing();
