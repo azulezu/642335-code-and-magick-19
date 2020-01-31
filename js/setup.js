@@ -1,5 +1,8 @@
 'use strict';
 
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
+
 var WIZARD_COUNT = 4;
 
 var WIZARD_FIRST_NAMES = [
@@ -106,8 +109,65 @@ var showUserDialog = function () {
   var userDialog = document.querySelector('.setup');
   userDialog.classList.remove('hidden');
   userDialog.querySelector('.setup-similar').classList.remove('hidden');
+  document.addEventListener('keydown', onSetupEscKeydown);
+};
+
+var hideUserDialog = function () {
+  var userDialog = document.querySelector('.setup');
+  userDialog.classList.add('hidden');
+  document.removeEventListener('keydown', onSetupEscKeydown);
+};
+
+// -------------------------------------------------
+// добавляет обработчики для окна
+// -------------------------------------------------
+var onSetupEscKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (!evt.target.classList.contains('setup-user-name')) {
+      hideUserDialog();
+    }
+  }
+};
+
+var onSetupOpenIconEnterKeydown = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    evt.target.removeEventListener('focus', onSetupOpenIconFocus);
+    showUserDialog();
+  }
+};
+
+var onSetupOpenIconFocus = function (evt) {
+  evt.target.addEventListener('keydown', onSetupOpenIconEnterKeydown);
+};
+
+// открытие-закрытие окна
+var addSetupWindowProcessing = function () {
+  var setupOpenElement = document.querySelector('.setup-open');
+  var setupOpenIconElement = document.querySelector('.setup-open-icon');
+  var setupCloseElement = document.querySelector('.setup-close');
+
+  setupOpenElement.addEventListener('click', function () {
+    showUserDialog();
+  });
+
+  setupOpenIconElement.tabIndex = '0';
+  // добавить aria
+  setupOpenIconElement.addEventListener('focus', onSetupOpenIconFocus);
+  setupOpenIconElement.addEventListener('blur', function () {
+    setupOpenIconElement.removeEventListener('focus', onSetupOpenIconFocus);
+  });
+
+  setupCloseElement.tabIndex = '0';
+  setupCloseElement.addEventListener('click', function () {
+    hideUserDialog();
+  });
+  setupCloseElement.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      hideUserDialog();
+    }
+  });
 };
 
 var wizards = createWizards();
 renderWizards(wizards);
-showUserDialog();
+addSetupWindowProcessing();
