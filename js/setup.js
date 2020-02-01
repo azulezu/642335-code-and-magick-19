@@ -1,7 +1,7 @@
 'use strict';
 
-var ENTER_KEYCODE = 13;
-var ESC_KEYCODE = 27;
+var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
 
 var WIZARD_COUNT = 4;
 
@@ -51,6 +51,9 @@ var WIZARD_FIREBALL_COLORS = [
   '#e848d5',
   '#e6e848',
 ];
+
+var MIN_NAME_LENGTH = 2;
+var MAX_NAME_LENGTH = 25;
 
 // -------------------------------------------------
 // вспомогательные функции
@@ -130,7 +133,7 @@ var hideUserDialog = function () {
 // добавляет обработчики для окна
 // -------------------------------------------------
 var onSetupEscKeydown = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.key === ESC_KEY) {
     if (!evt.target.classList.contains('setup-user-name')) {
       hideUserDialog();
     }
@@ -138,7 +141,7 @@ var onSetupEscKeydown = function (evt) {
 };
 
 var onSetupOpenIconEnterKeydown = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.key === ENTER_KEY) {
     evt.target.removeEventListener('focus', onSetupOpenIconFocus);
     showUserDialog();
   }
@@ -170,7 +173,7 @@ var addSetupWindowProcessing = function () {
     hideUserDialog();
   });
   setupCloseElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.key === ENTER_KEY) {
       hideUserDialog();
     }
   });
@@ -179,6 +182,19 @@ var addSetupWindowProcessing = function () {
 // -------------------------------------------------
 // добавляет обработчики для формы
 // -------------------------------------------------
+var onUserNameInputInvalid = function (evt) {
+  var userNameElement = evt.target;
+  if (userNameElement.validity.tooShort) {
+    userNameElement.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (userNameElement.validity.tooLong) {
+    userNameElement.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else if (userNameElement.validity.valueMissing) {
+    userNameElement.setCustomValidity('Обязательное поле');
+  } else {
+    userNameElement.setCustomValidity('');
+  }
+};
+
 var colorizeWizard = function (targetElement) {
   var wizardElement = document.querySelector('.setup-wizard-appearance');
   var wizardPart = '';
@@ -205,10 +221,32 @@ var colorizeFireball = function (wrapElement) {
   wrapElement.style.backgroundColor = color;
 };
 
+// обработка действий в форме
 var addUserDialogProcessing = function () {
   var userDialogElement = document.querySelector('.setup');
+  var userNameInput = userDialogElement.querySelector('.setup-user-name');
   var wizardElement = userDialogElement.querySelector('.setup-wizard');
   var wizardFireballElement = userDialogElement.querySelector('.setup-fireball-wrap');
+
+  userDialogElement.querySelector('.setup-wizard-form')
+    .setAttribute('action', 'https://js.dump.academy/code-and-magick');
+
+  userNameInput.setAttribute('required', '');
+  userNameInput.setAttribute('minlength', MIN_NAME_LENGTH);
+  userNameInput.setAttribute('maxlength', MAX_NAME_LENGTH);
+
+  userNameInput.addEventListener('invalid', onUserNameInputInvalid);
+
+  userNameInput.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value.length < MIN_NAME_LENGTH) {
+      // не работает сообщение?
+      target.setCustomValidity('Имя должно состоять минимум из '
+      + MIN_NAME_LENGTH + '-х символов!');
+    } else {
+      target.setCustomValidity('');
+    }
+  });
 
   wizardElement.addEventListener('click', function (evt) {
     colorizeWizard(evt.target);
@@ -219,6 +257,7 @@ var addUserDialogProcessing = function () {
   });
 };
 
+// основной блок
 var wizards = createWizards();
 renderWizards(wizards);
 addSetupWindowProcessing();
