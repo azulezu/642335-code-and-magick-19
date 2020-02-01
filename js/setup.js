@@ -198,17 +198,19 @@ var onUserNameInputInvalid = function (evt) {
 var colorizeWizard = function (targetElement) {
   var wizardElement = document.querySelector('.setup-wizard-appearance');
   var wizardPart = '';
+  var color = '';
   switch (targetElement.classList[0]) {
     case 'wizard-coat':
       wizardPart = 'coat';
+      color = getRandomArrayElement(WIZARD_COAT_COLORS);
       break;
     case 'wizard-eyes':
       wizardPart = 'eyes';
+      color = getRandomArrayElement(WIZARD_EYES_COLORS);
       break;
     default:
       return;
   }
-  var color = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
   var inputElement = wizardElement.querySelector('input[name="' + wizardPart + '-color"]');
   inputElement.value = color;
   targetElement.style.fill = color;
