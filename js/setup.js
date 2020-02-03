@@ -195,47 +195,26 @@ var onUserNameInputInvalid = function (evt) {
   }
 };
 
-var colorizeWizard = function (targetElement) {
-  var wizardElement = document.querySelector('.setup-wizard-appearance');
-  var wizardPart = '';
-  var color = '';
-  switch (targetElement.classList[0]) {
-    case 'wizard-coat':
-      wizardPart = 'coat';
-      color = getRandomArrayElement(WIZARD_COAT_COLORS);
-      break;
-    case 'wizard-eyes':
-      wizardPart = 'eyes';
-      color = getRandomArrayElement(WIZARD_EYES_COLORS);
-      break;
-    default:
-      return;
-  }
-  var inputElement = wizardElement.querySelector('input[name="' + wizardPart + '-color"]');
+var colorizeWizard = function (colors, element, name) {
+  var color = getRandomArrayElement(colors);
+  var inputElement = document.querySelector('input[name="' + name + '"]');
   inputElement.value = color;
-  targetElement.style.fill = color;
-};
-
-var colorizeFireball = function (wrapElement) {
-  var color = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
-  var inputElement = wrapElement.querySelector('input[name="fireball-color"]');
-  inputElement.value = color;
-  wrapElement.style.backgroundColor = color;
+  element.style[element.tagName === 'DIV' ? 'backgroundColor' : 'fill'] = color;
 };
 
 // обработка действий в форме
 var addUserDialogProcessing = function () {
   var userDialogElement = document.querySelector('.setup');
   var userNameInput = userDialogElement.querySelector('.setup-user-name');
-  var wizardElement = userDialogElement.querySelector('.setup-wizard');
-  var wizardFireballElement = userDialogElement.querySelector('.setup-fireball-wrap');
+  var wizardCoatElement = document.querySelector('.setup-wizard .wizard-coat');
+  var wizardEyesElement = document.querySelector('.setup-wizard .wizard-eyes');
+  var wizardFireballElement = document.querySelector('.setup-fireball-wrap');
 
-  userDialogElement.querySelector('.setup-wizard-form')
-    .setAttribute('action', 'https://js.dump.academy/code-and-magick');
+  userDialogElement.querySelector('.setup-wizard-form').action = 'https://js.dump.academy/code-and-magick';
 
-  userNameInput.setAttribute('required', '');
-  userNameInput.setAttribute('minlength', MIN_NAME_LENGTH);
-  userNameInput.setAttribute('maxlength', MAX_NAME_LENGTH);
+  userNameInput.required = true;
+  userNameInput.minlength = MIN_NAME_LENGTH;
+  userNameInput.maxlength = MAX_NAME_LENGTH;
 
   userNameInput.addEventListener('invalid', onUserNameInputInvalid);
 
@@ -250,12 +229,14 @@ var addUserDialogProcessing = function () {
     }
   });
 
-  wizardElement.addEventListener('click', function (evt) {
-    colorizeWizard(evt.target);
+  wizardCoatElement.addEventListener('click', function (evt) {
+    colorizeWizard(WIZARD_COAT_COLORS, evt.target, 'coat-color');
   });
-
+  wizardEyesElement.addEventListener('click', function (evt) {
+    colorizeWizard(WIZARD_EYES_COLORS, evt.target, 'eyes-color');
+  });
   wizardFireballElement.addEventListener('click', function (evt) {
-    colorizeFireball(evt.currentTarget);
+    colorizeWizard(WIZARD_FIREBALL_COLORS, evt.target, 'fireball-color');
   });
 };
 
