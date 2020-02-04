@@ -213,21 +213,10 @@ var addUserDialogProcessing = function () {
   userDialogElement.querySelector('.setup-wizard-form').action = 'https://js.dump.academy/code-and-magick';
 
   userNameInput.required = true;
-  userNameInput.minlength = MIN_NAME_LENGTH;
-  userNameInput.maxlength = MAX_NAME_LENGTH;
+  userNameInput.minLength = MIN_NAME_LENGTH;
+  userNameInput.maxLength = MAX_NAME_LENGTH;
 
   userNameInput.addEventListener('invalid', onUserNameInputInvalid);
-
-  userNameInput.addEventListener('input', function (evt) {
-    var target = evt.target;
-    if (target.value.length < MIN_NAME_LENGTH) {
-      // не работает сообщение?
-      target.setCustomValidity('Имя должно состоять минимум из '
-      + MIN_NAME_LENGTH + '-х символов!');
-    } else {
-      target.setCustomValidity('');
-    }
-  });
 
   wizardCoatElement.addEventListener('click', function (evt) {
     colorizeWizard(WIZARD_COAT_COLORS, evt.target, 'coat-color');
