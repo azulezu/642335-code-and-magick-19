@@ -227,6 +227,12 @@ var addUserDialogProcessing = function () {
   wizardFireballElement.addEventListener('click', function (evt) {
     colorizeWizard(WIZARD_FIREBALL_COLORS, evt.target, 'fireball-color');
   });
+  userNameInput.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value.length < MIN_NAME_LENGTH) {
+      target.setCustomValidity('');
+    }
+  });
 };
 
 // основной блок
