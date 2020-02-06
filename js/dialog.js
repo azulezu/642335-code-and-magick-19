@@ -80,13 +80,6 @@
     }
   };
 
-  var colorizeWizard = function (colors, element, name) {
-    var color = window.random.getRandomArrayElement(colors);
-    var inputElement = document.querySelector('input[name="' + name + '"]');
-    inputElement.value = color;
-    element.style[element.tagName === 'DIV' ? 'backgroundColor' : 'fill'] = color;
-  };
-
   // основная функция для обработки действий в форме
   var addUserDialogProcessing = function () {
     var userNameInput = userDialog.querySelector('.setup-user-name');
@@ -102,15 +95,10 @@
 
     userNameInput.addEventListener('invalid', onUserNameInputInvalid);
 
-    wizardCoatElement.addEventListener('click', function (evt) {
-      colorizeWizard(window.data.WIZARD_COAT_COLORS, evt.target, 'coat-color');
-    });
-    wizardEyesElement.addEventListener('click', function (evt) {
-      colorizeWizard(window.data.WIZARD_EYES_COLORS, evt.target, 'eyes-color');
-    });
-    wizardFireballElement.addEventListener('click', function (evt) {
-      colorizeWizard(window.data.WIZARD_FIREBALL_COLORS, evt.target, 'fireball-color');
-    });
+    window.colorize(wizardCoatElement, 'coat-color');
+    window.colorize(wizardEyesElement, 'eyes-color');
+    window.colorize(wizardFireballElement, 'fireball-color');
+
     userNameInput.addEventListener('input', function (evt) {
       var target = evt.target;
       if (target.value.length < MIN_NAME_LENGTH) {
