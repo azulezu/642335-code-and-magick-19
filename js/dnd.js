@@ -2,23 +2,27 @@
 
 (function () {
 
+  getPosition = function (element) {
+    return {
+      top: element.offsetTop,
+      left: element.offsetLeft
+    };
+  };
+
+  setPosition = function (element, position) {
+    // спросить про сравнение, если 0
+    if ((position.left || position.left === 0)
+    && (position.top || position.top === 0)) {
+      element.style.top = position.top + 'px';
+      element.style.left = position.left + 'px';
+    }
+  };
+
   window.dnd = {
 
-    getPosition: function (element) {
-      return {
-        top: element.offsetTop,
-        left: element.offsetLeft
-      };
-    },
+    getPosition: getPosition,
 
-    setPosition: function (element, position) {
-      // спросить про сравнение, если 0
-      if ((position.left || position.left === 0)
-      && (position.top || position.top === 0)) {
-        element.style.top = position.top + 'px';
-        element.style.left = position.left + 'px';
-      }
-    },
+    setPosition: setPosition,
 
     makeMovable: function (element, handler) {
       handler.addEventListener('mousedown', function (evt) {
@@ -43,7 +47,7 @@
             y: moveEvt.clientY
           };
 
-          window.dnd.setPosition(element, {
+          setPosition(element, {
             top: element.offsetTop - shift.y,
             left: element.offsetLeft - shift.x
           });
