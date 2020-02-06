@@ -2,74 +2,49 @@
 
 (function () {
 
-  getPosition = function (element) {
-    return {
-      top: element.offsetTop,
-      left: element.offsetLeft
-    };
-  };
+  window.makeMovable = function (element, handler) {
+    handler.addEventListener('mousedown', function (evt) {
+      evt.preventDefault();
+      var dragged = false;
+      var startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
 
-  setPosition = function (element, position) {
-    // спросить про сравнение, если 0
-    if ((position.left || position.left === 0)
-    && (position.top || position.top === 0)) {
-      element.style.top = position.top + 'px';
-      element.style.left = position.left + 'px';
-    }
-  };
+      var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+        dragged = true;
 
-  window.dnd = {
-
-    getPosition: getPosition,
-
-    setPosition: setPosition,
-
-    makeMovable: function (element, handler) {
-      handler.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-        var dragged = false;
-        var startCoords = {
-          x: evt.clientX,
-          y: evt.clientY
+        var shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY
         };
 
-        var onMouseMove = function (moveEvt) {
-          moveEvt.preventDefault();
-          dragged = true;
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
 
-          var shift = {
-            x: startCoords.x - moveEvt.clientX,
-            y: startCoords.y - moveEvt.clientY
+        element.style.top = element.offsetTop - shift.y + 'px';
+        element.style.left = element.offsetLeft - shift.x + 'px';
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+
+        if (dragged) {
+          var onClickPreventDefault = function (clickEvt) {
+            clickEvt.preventDefault();
+            handler.removeEventListener('click', onClickPreventDefault);
           };
+          handler.addEventListener('click', onClickPreventDefault);
+        }
+      };
 
-          startCoords = {
-            x: moveEvt.clientX,
-            y: moveEvt.clientY
-          };
-
-          setPosition(element, {
-            top: element.offsetTop - shift.y,
-            left: element.offsetLeft - shift.x
-          });
-        };
-
-        var onMouseUp = function (upEvt) {
-          upEvt.preventDefault();
-          document.removeEventListener('mousemove', onMouseMove);
-          document.removeEventListener('mouseup', onMouseUp);
-
-          if (dragged) {
-            var onClickPreventDefault = function (clickEvt) {
-              clickEvt.preventDefault();
-              handler.removeEventListener('click', onClickPreventDefault);
-            };
-            handler.addEventListener('click', onClickPreventDefault);
-          }
-        };
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-      });
-    }
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
   };
 })();

@@ -6,7 +6,6 @@
 
   var userDialog = document.querySelector('.setup');
   var dialogHandle = userDialog.querySelector('.upload');
-  var initPos = {};
 
   // -------------------------------------------------
   // обработчики и функции для окна
@@ -16,13 +15,13 @@
     userDialog.classList.remove('hidden');
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
     document.addEventListener('keydown', onSetupEscKeydown);
-    initPos = window.dnd.getPosition(userDialog, initPos);
   };
 
   var hideUserDialog = function () {
     userDialog.classList.add('hidden');
     document.removeEventListener('keydown', onSetupEscKeydown);
-    window.dnd.setPosition(userDialog, initPos);
+    userDialog.style.top = '';
+    userDialog.style.left = '';
   };
 
   var onSetupEscKeydown = function (evt) {
@@ -96,7 +95,7 @@
     userNameInput.minLength = MIN_NAME_LENGTH;
     userNameInput.maxLength = MAX_NAME_LENGTH;
 
-    window.dnd.makeMovable(userDialog, dialogHandle);
+    window.makeMovable(userDialog, dialogHandle);
 
     userNameInput.addEventListener('invalid', onUserNameInputInvalid);
 
