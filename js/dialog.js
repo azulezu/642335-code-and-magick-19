@@ -5,6 +5,8 @@
   var MAX_NAME_LENGTH = 25;
 
   var userDialog = document.querySelector('.setup');
+  var dialogHandle = userDialog.querySelector('.upload');
+  var initPos = {};
 
   // -------------------------------------------------
   // обработчики и функции для окна
@@ -14,11 +16,13 @@
     userDialog.classList.remove('hidden');
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
     document.addEventListener('keydown', onSetupEscKeydown);
+    initPos = window.dnd.getPosition(userDialog, initPos);
   };
 
   var hideUserDialog = function () {
     userDialog.classList.add('hidden');
     document.removeEventListener('keydown', onSetupEscKeydown);
+    window.dnd.setPosition(userDialog, initPos);
   };
 
   var onSetupEscKeydown = function (evt) {
@@ -88,10 +92,11 @@
     var wizardFireballElement = document.querySelector('.setup-fireball-wrap');
 
     userDialog.querySelector('.setup-wizard-form').action = 'https://js.dump.academy/code-and-magick';
-
     userNameInput.required = true;
     userNameInput.minLength = MIN_NAME_LENGTH;
     userNameInput.maxLength = MAX_NAME_LENGTH;
+
+    window.dnd.makeMovable(userDialog, dialogHandle);
 
     userNameInput.addEventListener('invalid', onUserNameInputInvalid);
 
