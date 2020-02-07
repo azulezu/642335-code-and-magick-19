@@ -6,6 +6,7 @@
     handler.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
       var dragged = false;
+      var isStartMove = false;
       var startCoords = {
         x: evt.clientX,
         y: evt.clientY
@@ -13,7 +14,10 @@
 
       var onMouseMove = function (moveEvt) {
         moveEvt.preventDefault();
-        dragged = true;
+        if (isStartMove) {
+          dragged = true;
+        }
+        isStartMove = true;
 
         var shift = {
           x: startCoords.x - moveEvt.clientX,
