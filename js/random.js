@@ -7,11 +7,11 @@
   };
 
   window.random = {
-    getRandomBoolean: function () {
+    getBoolean: function () {
       return !!(Math.round(Math.random()));
     },
 
-    getRandomArrayElement: function (array) {
+    getArrayElement: function (array) {
       return array[getRandomNumber(0, array.length - 1)];
     }
   };

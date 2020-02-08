@@ -4,7 +4,6 @@
 
   window.makeMovable = function (element, handler) {
     handler.addEventListener('mousedown', function (evt) {
-      evt.preventDefault();
       var dragged = false;
       var isStartMove = false;
       var startCoords = {
@@ -13,7 +12,6 @@
       };
 
       var onMouseMove = function (moveEvt) {
-        moveEvt.preventDefault();
         if (isStartMove) {
           dragged = true;
         }
@@ -33,8 +31,7 @@
         element.style.left = element.offsetLeft - shift.x + 'px';
       };
 
-      var onMouseUp = function (upEvt) {
-        upEvt.preventDefault();
+      var onMouseUp = function () {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 

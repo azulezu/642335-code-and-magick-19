@@ -5,11 +5,11 @@
   var getRandomColor = function (name) {
     switch (name) {
       case 'coat-color':
-        return window.random.getRandomArrayElement(window.data.WIZARD_COAT_COLORS);
+        return window.random.getArrayElement(window.data.WIZARD_COAT_COLORS);
       case 'eyes-color':
-        return window.random.getRandomArrayElement(window.data.WIZARD_EYES_COLORS);
+        return window.random.getArrayElement(window.data.WIZARD_EYES_COLORS);
       case 'fireball-color':
-        return window.random.getRandomArrayElement(window.data.WIZARD_FIREBALL_COLORS);
+        return window.random.getArrayElement(window.data.WIZARD_FIREBALL_COLORS);
     }
     return '';
   };

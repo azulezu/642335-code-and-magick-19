@@ -56,12 +56,12 @@
     for (var i = 0; i < count; i++) {
       var wizard = {};
       var name = [
-        window.random.getRandomArrayElement(WIZARD_FIRST_NAMES),
-        window.random.getRandomArrayElement(WIZARD_SECOND_NAMES),
+        window.random.getArrayElement(WIZARD_FIRST_NAMES),
+        window.random.getArrayElement(WIZARD_SECOND_NAMES),
       ];
-      wizard.name = window.random.getRandomBoolean() ? name.join(' ') : name.reverse().join(' ');
-      wizard.coatColor = window.random.getRandomArrayElement(WIZARD_COAT_COLORS);
-      wizard.eyesColor = window.random.getRandomArrayElement(WIZARD_EYES_COLORS);
+      wizard.name = window.random.getBoolean() ? name.join(' ') : name.reverse().join(' ');
+      wizard.coatColor = window.random.getArrayElement(WIZARD_COAT_COLORS);
+      wizard.eyesColor = window.random.getArrayElement(WIZARD_EYES_COLORS);
       wizardsData.push(wizard);
     }
     return wizardsData;
