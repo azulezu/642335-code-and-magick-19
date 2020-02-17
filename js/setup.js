@@ -15,6 +15,7 @@
 
   // показывает волшебников на странице
   var renderWizards = function (wizards) {
+    // throw {message: 'Это фигня какая-то'};
     var fragment = document.createDocumentFragment();
     wizards.forEach(function (wizard) {
       fragment.appendChild(renderWizard(wizard));
@@ -23,7 +24,32 @@
     similarListElement.appendChild(fragment);
   };
 
+  var getSimilarWizards = function (wizards) {
+    if (wizards.length < window.data.WIZARD_COUNT) {
+      return wizards.slice(0);
+    }
+    var start = window.random.getNumber(0, wizards.length - window.data.WIZARD_COUNT);
+    return wizards.slice(start, start + 4);
+  };
+
   // -------------------------
-  renderWizards(window.data.wizards);
+  window.backend.load(function onSuccessCase(response) {
+    var loadedWizards = [];
+    try {
+      loadedWizards = Array.from(response).map(function (wizard) {
+        return {
+          'name': wizard.name,
+          'coatColor': wizard.colorCoat,
+          'eyesColor': wizard.colorEyes,
+          'fireballColor': wizard.colorFireball
+        };
+      });
+      renderWizards(getSimilarWizards(loadedWizards));
+    } catch (err) {
+      window.util.renderErrorMessage('Ошибка преобразования данных: ' + err.message);
+    }
+  }, function onErrorCase(response) {
+    window.util.renderErrorMessage('Ошибка получения данных: ' + response);
+  });
 
 })();
