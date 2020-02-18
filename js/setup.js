@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+  var loadedWizards = [];
+
+  // для хранения текущих значений, по которым ищутся похожие
+  var similarColors = {
+    coat: 'rgb(101, 137, 164)',
+    eyes: 'black',
+    fireball: '#ee4830'
+  };
+
   // coздает элемент, соотв. данным волшебника
   var renderWizard = function (wizard) {
     var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
@@ -20,20 +29,45 @@
       fragment.appendChild(renderWizard(wizard));
     });
     var similarListElement = document.querySelector('.setup-similar-list');
+    similarListElement.innerHTML = '';
     similarListElement.appendChild(fragment);
   };
 
-  var getSimilarWizards = function (wizards) {
-    if (wizards.length < window.data.WIZARD_COUNT) {
-      return wizards.slice(0);
+  var getRank = function (wizard) {
+    var rank = 0;
+    if (wizard.coatColor === similarColors.coat) {
+      rank += 2;
     }
-    var start = window.random.getNumber(0, wizards.length - window.data.WIZARD_COUNT);
-    return wizards.slice(start, start + window.data.WIZARD_COUNT);
+    if (wizard.eyesColor === similarColors.eyes) {
+      rank += 1;
+    }
+    return rank;
+  };
+
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var sortSimilarWizards = function () {
+    var wizards = loadedWizards.slice();
+    wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    });
+    renderWizards(wizards.slice(0, window.data.WIZARD_COUNT));
   };
 
   // -------------------------
   window.backend.load(function onSuccessCase(response) {
-    var loadedWizards = [];
     try {
       loadedWizards = Array.from(response).map(function (wizard) {
         return {
@@ -43,7 +77,7 @@
           'fireballColor': wizard.colorFireball
         };
       });
-      renderWizards(getSimilarWizards(loadedWizards));
+      sortSimilarWizards();
     } catch (err) {
       window.util.renderErrorMessage('Ошибка преобразования данных: ' + err.message);
     }
