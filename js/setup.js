@@ -15,7 +15,6 @@
 
   // показывает волшебников на странице
   var renderWizards = function (wizards) {
-    // throw {message: 'Это фигня какая-то'};
     var fragment = document.createDocumentFragment();
     wizards.forEach(function (wizard) {
       fragment.appendChild(renderWizard(wizard));
@@ -29,7 +28,7 @@
       return wizards.slice(0);
     }
     var start = window.random.getNumber(0, wizards.length - window.data.WIZARD_COUNT);
-    return wizards.slice(start, start + 4);
+    return wizards.slice(start, start + window.data.WIZARD_COUNT);
   };
 
   // -------------------------

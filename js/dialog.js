@@ -95,6 +95,7 @@
       hideUserDialog();
     }, function onErrorCase(response) {
       sendButton.textContent = 'Сохранить';
+      window.util.removeErrorMessage();
       window.util.renderErrorMessage('Ошибка отправки формы: ' + response);
     });
   };
