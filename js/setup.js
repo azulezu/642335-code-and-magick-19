@@ -69,7 +69,7 @@
   var updateWizards = function (part, color) {
     // записывает изменененный цвет
     similarColors[part] = color;
-    sortSimilarWizards();
+    window.debounce(sortSimilarWizards)();
   };
 
   window.setup = {
