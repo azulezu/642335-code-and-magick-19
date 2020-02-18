@@ -13,7 +13,9 @@
 
     getArrayElement: function (array) {
       return array[getRandomNumber(0, array.length - 1)];
-    }
+    },
+
+    getNumber: getRandomNumber
   };
 
 })();

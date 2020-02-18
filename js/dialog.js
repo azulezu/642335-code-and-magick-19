@@ -6,6 +6,7 @@
 
   var userDialog = document.querySelector('.setup');
   var dialogHandle = userDialog.querySelector('.upload');
+  var form = userDialog.querySelector('.setup-wizard-form');
 
   // -------------------------------------------------
   // обработчики и функции для окна
@@ -19,6 +20,7 @@
 
   var hideUserDialog = function () {
     userDialog.classList.add('hidden');
+    window.util.removeErrorMessage();
     document.removeEventListener('keydown', onSetupEscKeydown);
     userDialog.style.top = '';
     userDialog.style.left = '';
@@ -83,6 +85,21 @@
     }
   };
 
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    var sendButton = document.querySelector('.button.setup-submit');
+    sendButton.textContent = 'Идет сохранение...';
+
+    window.backend.send(new FormData(form), function onSuccessCase() {
+      sendButton.textContent = 'Сохранить';
+      hideUserDialog();
+    }, function onErrorCase(response) {
+      sendButton.textContent = 'Сохранить';
+      window.util.removeErrorMessage();
+      window.util.renderErrorMessage('Ошибка отправки формы: ' + response);
+    });
+  };
+
   // основная функция для обработки действий в форме
   var addUserDialogProcessing = function () {
     var userNameInput = userDialog.querySelector('.setup-user-name');
@@ -90,7 +107,7 @@
     var wizardEyesElement = document.querySelector('.setup-wizard .wizard-eyes');
     var wizardFireballElement = document.querySelector('.setup-fireball-wrap');
 
-    userDialog.querySelector('.setup-wizard-form').action = 'https://js.dump.academy/code-and-magick';
+    form.action = 'https://js.dump.academy/code-and-magick';
     userNameInput.required = true;
     userNameInput.minLength = MIN_NAME_LENGTH;
     userNameInput.maxLength = MAX_NAME_LENGTH;
@@ -109,6 +126,8 @@
         target.setCustomValidity('');
       }
     });
+
+    form.addEventListener('submit', onFormSubmit);
   };
 
   // -------------------------
