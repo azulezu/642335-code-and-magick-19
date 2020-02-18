@@ -16,7 +16,7 @@
     '503': 'сервер временно недоступен'
   };
 
-  var setupXMLHTTPRequest = function (onLoad, onError) {
+  var setupXMLHttpRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -41,14 +41,14 @@
 
   window.backend = {
     load: function (onLoad, onError) {
-      var xhr = setupXMLHTTPRequest(onLoad, onError);
+      var xhr = setupXMLHttpRequest(onLoad, onError);
       xhr.timeout = TIMEOUT;
       xhr.open('GET', URL_GET);
       xhr.send();
     },
 
     send: function (data, onLoad, onError) {
-      var xhr = setupXMLHTTPRequest(onLoad, onError);
+      var xhr = setupXMLHttpRequest(onLoad, onError);
       xhr.timeout = TIMEOUT;
       xhr.open('POST', URL_POST);
       xhr.send(data);
