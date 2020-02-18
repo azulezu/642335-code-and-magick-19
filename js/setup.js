@@ -66,6 +66,16 @@
     renderWizards(wizards.slice(0, window.data.WIZARD_COUNT));
   };
 
+  var updateWizards = function (part, color) {
+    // записывает изменененный цвет
+    similarColors[part] = color;
+    sortSimilarWizards();
+  };
+
+  window.setup = {
+    updateWizards: updateWizards
+  };
+
   // -------------------------
   window.backend.load(function onSuccessCase(response) {
     try {

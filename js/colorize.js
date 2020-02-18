@@ -20,6 +20,10 @@
       var inputElement = document.querySelector('input[name="' + name + '"]');
       inputElement.value = color;
       element.style[element.tagName === 'DIV' ? 'backgroundColor' : 'fill'] = color;
+
+      // код для вызова поиска похожих
+      var part = name.split('-')[0];
+      window.setup.updateWizards(part, color);
     });
   };
 
