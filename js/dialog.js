@@ -116,9 +116,9 @@
 
     userNameInput.addEventListener('invalid', onUserNameInputInvalid);
 
-    window.colorize(wizardCoatElement, 'coat-color');
-    window.colorize(wizardEyesElement, 'eyes-color');
-    window.colorize(wizardFireballElement, 'fireball-color');
+    window.colorize.setOnElement(wizardCoatElement, 'coat-color');
+    window.colorize.setOnElement(wizardEyesElement, 'eyes-color');
+    window.colorize.setOnElement(wizardFireballElement, 'fireball-color');
 
     userNameInput.addEventListener('input', function (evt) {
       var target = evt.target;

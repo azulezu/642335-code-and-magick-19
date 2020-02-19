@@ -54,7 +54,7 @@
     }
   };
 
-  var sortSimilarWizards = function () {
+  var updateWizards = function () {
     var wizards = loadedWizards.slice();
     wizards.sort(function (left, right) {
       var rankDiff = getRank(right) - getRank(left);
@@ -66,17 +66,12 @@
     renderWizards(wizards.slice(0, window.data.WIZARD_COUNT));
   };
 
-  var updateWizards = function (part, color) {
+  window.colorize.onColorChange = window.debounce(function (part, color) {
     // записывает изменененный цвет
     similarColors[part] = color;
-    window.debounce(sortSimilarWizards);
-  };
+    updateWizards();
+  });
 
-  window.setup = {
-    updateWizards: updateWizards
-  };
-
-  // -------------------------
   window.backend.load(function onSuccessCase(response) {
     try {
       loadedWizards = Array.from(response).map(function (wizard) {
@@ -87,7 +82,7 @@
           'fireballColor': wizard.colorFireball
         };
       });
-      sortSimilarWizards();
+      updateWizards();
     } catch (err) {
       window.util.renderErrorMessage('Ошибка преобразования данных: ' + err.message);
     }

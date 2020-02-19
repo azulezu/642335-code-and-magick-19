@@ -2,6 +2,8 @@
 
 (function () {
 
+  var onColorChange = function () {};
+
   var getRandomColor = function (name) {
     switch (name) {
       case 'coat-color':
@@ -14,7 +16,7 @@
     return '';
   };
 
-  window.colorize = function (element, name) {
+  var setOnElement = function (element, name) {
     element.addEventListener('click', function () {
       var color = getRandomColor(name);
       var inputElement = document.querySelector('input[name="' + name + '"]');
@@ -23,8 +25,13 @@
 
       // код для вызова поиска похожих
       var part = name.split('-')[0];
-      window.setup.updateWizards(part, color);
+      window.colorize.onColorChange(part, color);
     });
+  };
+
+  window.colorize = {
+    onColorChange: onColorChange,
+    setOnElement: setOnElement
   };
 
 })();
