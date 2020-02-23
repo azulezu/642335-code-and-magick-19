@@ -2,6 +2,8 @@
 
 (function () {
 
+  var processColorChange = function () {};
+
   var getRandomColor = function (name) {
     switch (name) {
       case 'coat-color':
@@ -14,13 +16,22 @@
     return '';
   };
 
-  window.colorize = function (element, name) {
+  var setOnElement = function (element, name) {
     element.addEventListener('click', function () {
       var color = getRandomColor(name);
       var inputElement = document.querySelector('input[name="' + name + '"]');
       inputElement.value = color;
       element.style[element.tagName === 'DIV' ? 'backgroundColor' : 'fill'] = color;
+
+      // код для вызова поиска похожих
+      var part = name.split('-')[0];
+      window.colorize.processColorChange(part, color);
     });
+  };
+
+  window.colorize = {
+    processColorChange: processColorChange,
+    setOnElement: setOnElement
   };
 
 })();
