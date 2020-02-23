@@ -23,13 +23,7 @@
   };
 
   var namesComparator = function (left, right) {
-    if (left > right) {
-      return 1;
-    } else if (left < right) {
-      return -1;
-    } else {
-      return 0;
-    }
+    return left > right ? 1 : -1;
   };
 
   var updateWizards = function () {
@@ -45,7 +39,7 @@
   };
 
   // -------------------------------------------------
-  window.colorize.onColorChange = window.debounce(function (part, color) {
+  window.colorize.processColorChange = window.debounce(function (part, color) {
     // записывает изменененный цвет
     similarColors[part] = color;
     updateWizards();

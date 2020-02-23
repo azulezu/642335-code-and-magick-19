@@ -2,7 +2,7 @@
 
 (function () {
 
-  var onColorChange = function () {};
+  var processColorChange = function () {};
 
   var getRandomColor = function (name) {
     switch (name) {
@@ -25,12 +25,12 @@
 
       // код для вызова поиска похожих
       var part = name.split('-')[0];
-      window.colorize.onColorChange(part, color);
+      window.colorize.processColorChange(part, color);
     });
   };
 
   window.colorize = {
-    onColorChange: onColorChange,
+    processColorChange: processColorChange,
     setOnElement: setOnElement
   };
 
